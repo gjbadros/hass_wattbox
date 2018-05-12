@@ -23,7 +23,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         devs.append(dev)
 
     add_devices(devs, True)
-    _LOGGER.warning("Added " + devs)
+    _LOGGER.warning("Added " + str(devs))
     return True
 
 
