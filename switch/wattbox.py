@@ -7,8 +7,7 @@ https://home-assistant.io/components/light.ketra/
 import logging
 
 from homeassistant.components.switch import SwitchDevice
-from .. import wattbox
-#(WattBoxDevice, WATTBOX_DEVICES, WATTBOX_CONTROLLER)
+from ..wattbox import WattBoxDevice, WATTBOX_DEVICES, WATTBOX_CONTROLLER
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,8 +17,8 @@ DEPENDENCIES = ['wattbox']
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the wattbox power strip switches."""
     devs = []
-    for (area_name, device) in hass.data[wattbox.WATTBOX_DEVICES]['switch']:
-        dev = WattBoxSwitch(area_name, device, hass.data[wattbox.WATTBOX_CONTROLLER])
+    for (area_name, device) in hass.data[WATTBOX_DEVICES]['switch']:
+        dev = WattBoxSwitch(area_name, device, hass.data[WATTBOX_CONTROLLER])
         devs.append(dev)
 
     add_devices(devs, True)
@@ -27,12 +26,12 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     return True
 
 
-class WattBoxSwitch(wattbox.WattBoxDevice, SwitchDevice):
+class WattBoxSwitch(WattBoxDevice, SwitchDevice):
     """Representation of a WattBox outlet, just on and off."""
 
     def __init__(self, area_name, wattbox_switch, controller):
         """Initialize the light."""
-        wattbox.WattBoxDevice.__init__(self, area_name, wattbox_switch, controller)
+        WattBoxDevice.__init__(self, area_name, wattbox_switch, controller)
         self._prev = None
 
     def turn_on(self, **kwargs):
