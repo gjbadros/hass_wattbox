@@ -68,6 +68,8 @@ class WattBoxDevice(Entity):
         self._wattbox_switch = wattbox_switch
         self._controller = controller
         self._area_name = area_name
+        self._unique_id = 'wattbox-{}-{}'.format(wattbox_switch._wattbox._serial_number,
+                                                 wattbox_switch._outlet_num)
 
     @asyncio.coroutine
     def async_added_to_hass(self):
@@ -86,3 +88,10 @@ class WattBoxDevice(Entity):
     def should_poll(self):
         """No polling needed."""
         return True
+
+    @property
+    def unique_id(self):
+        """Unique ID of wattbox device -- uses serial number and outlet number."""
+        return self._unique_id
+
+    
