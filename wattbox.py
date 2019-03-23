@@ -18,50 +18,61 @@ from homeassistant.helpers.entity import Entity
 REQUIREMENTS = ['pywattbox==0.0.1']
 
 DOMAIN = 'wattbox'
+DEVICES = 'wattbox_devices'
 
 _LOGGER = logging.getLogger(__name__)
 
-WATTBOX_CONTROLLER = 'wattbox_controller'
-WATTBOX_DEVICES = 'wattbox_devices'
+CONF_AREA = 'area'
+CONF_SWITCH_NOOP = 'switch_noop'
+
+DEVICE_SCHEMA = vol.Schema({
+    vol.Required(CONF_HOST): cv.string,
+    vol.Required(CONF_USERNAME): cv.string,
+    vol.Required(CONF_PASSWORD): cv.string,
+    vol.Optional("area"): cv.string, #FIXME
+    vol.Optional("noop_set_state"): cv.boolean, #FIXME
+})
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
-        vol.Required(CONF_HOST): cv.string,
-        vol.Required(CONF_USERNAME): cv.string,
-        vol.Required(CONF_PASSWORD): cv.string,
-        vol.Optional("area"): cv.string, #FIXME
-        vol.Optional("noop_set_state"): cv.boolean, #FIXME
-    })
+        vol.Required(CONF_DEVICES): vol.All(cv.ensure_list, [DEVICE_SCHEMA])
+    }),
 }, extra=vol.ALLOW_EXTRA)
 
 
-def setup(hass, base_config):
+def setup(hass, config):
     """Set up the WattBox component."""
     from pywattbox import WattBox
 
-    hass.data[WATTBOX_CONTROLLER] = None
-    hass.data[WATTBOX_DEVICES] = {'switch': []}
+    wattboxes = []
+
+    hass.data[DEVICES] = {'switch': []}
+
+    for index, wb_config in enumerate(config[DOMAIN][CONF_DEVICES]):
+        host = wb_config.get(CONF_HOST)
+        username = wb_config.get(CONF_USERNAME)
+        password = wb_config.get(CONF_PASSWORD)
+        area = wb_config.get(CONF_AREA)
+        noop = wb_config.get(CONF_SWITCH_NOOP)
+
+        wattbox = WattBox(host, username, password, area, noop)
+        wattboxes.append(wattbox)
+        wattbox.load_xml()
+        _LOGGER.info("Loaded config from Wattbox at %s", host)
+        for switch in wattbox.switches:
+            _LOGGER.info("adding switch %s (%s)", switch, str(wattbox))
+            hass.data[DEVICES]['switch'].append((area, switch, wattbox))
     
-    config = base_config.get(DOMAIN)
-    area = config.get('area', 'wattbox')
-    hass.data[WATTBOX_CONTROLLER] = WattBox(
-        config[CONF_HOST], config[CONF_USERNAME],
-        config[CONF_PASSWORD], area, config.get("noop_set_state"))
+    hass.data[DOMAIN] = wattboxes
+    
+    discovery.load_platform(hass, 'switch', DOMAIN, None, config)
 
-    hass.data[WATTBOX_CONTROLLER].load_xml()
-    _LOGGER.info("Loaded config from Wattbox at %s", config[CONF_HOST])
-
-    # Sort our devices into types
-    for switch in hass.data[WATTBOX_CONTROLLER].switches:
-        _LOGGER.info("adding switch %s", switch)
-        hass.data[WATTBOX_DEVICES]['switch'].append((area, switch))
-
-    discovery.load_platform(hass, 'switch', DOMAIN, None, base_config)
     return True
 
 
+# The only device type now is a switch but we keep this here anyway
 class WattBoxDevice(Entity):
-    """Representation of a Ketra device entity."""
+    """Representation of a wattbox device entity."""
 
     def __init__(self, area_name, wattbox_switch, controller):
         """Initialize the device."""

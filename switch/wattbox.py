@@ -17,8 +17,8 @@ DEPENDENCIES = ['wattbox']
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the wattbox power strip switches."""
     devs = []
-    for (area_name, device) in hass.data[WATTBOX_DEVICES]['switch']:
-        dev = WattBoxSwitch(area_name, device, hass.data[WATTBOX_CONTROLLER])
+    for (area_name, device, wattbox) in hass.data[DEVICES]['switch']:
+        dev = WattBoxSwitch(area_name, device, wattbox)
         devs.append(dev)
 
     add_devices(devs, True)
@@ -54,3 +54,10 @@ class WattBoxSwitch(WattBoxDevice, SwitchDevice):
         """Call when forcing a refresh of the device."""
         if self._wattbox_switch.update():
             self.schedule_update_has_state()
+
+    @property
+    def device_state_attributes(self):
+        """Return the state attributes."""
+        attr = {}
+        attr['Controller'] = str(self._controller)
+        return attr
