@@ -10,7 +10,7 @@ import logging
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
-from homeassistant.const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD
+from homeassistant.const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD, CONF_DEVICES
 from homeassistant.const import CONF_PAYLOAD_OFF, CONF_PAYLOAD_ON
 from homeassistant.helpers import discovery
 from homeassistant.helpers.entity import Entity

@@ -7,7 +7,7 @@ https://home-assistant.io/components/light.ketra/
 import logging
 
 from homeassistant.components.switch import SwitchDevice
-from ..wattbox import WattBoxDevice, WATTBOX_DEVICES, WATTBOX_CONTROLLER
+from ..wattbox import WattBoxDevice, DEVICES, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,5 +59,5 @@ class WattBoxSwitch(WattBoxDevice, SwitchDevice):
     def device_state_attributes(self):
         """Return the state attributes."""
         attr = {}
-        attr['Controller'] = str(self._controller)
+        attr['Controller'] = self._controller.unique_id
         return attr
