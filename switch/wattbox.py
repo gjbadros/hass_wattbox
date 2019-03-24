@@ -59,7 +59,6 @@ class WattBoxSwitch(WattBoxDevice, SwitchDevice):
     def device_state_attributes(self):
         """Return the state attributes."""
         attr = {}
-        # TODO: use exposed property instead of private field
-        attr['Host'] = self._controller._host
+        attr['Host'] = self._controller.host
         attr['Outlet'] = self.unique_id
         return attr

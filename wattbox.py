@@ -15,7 +15,7 @@ from homeassistant.const import CONF_PAYLOAD_OFF, CONF_PAYLOAD_ON
 from homeassistant.helpers import discovery
 from homeassistant.helpers.entity import Entity
 
-REQUIREMENTS = ['pywattbox==0.0.1']
+REQUIREMENTS = ['pywattbox==0.0.2']
 
 DOMAIN = 'wattbox'
 DEVICES = 'wattbox_devices'
