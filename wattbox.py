@@ -55,13 +55,16 @@ def setup(hass, config):
         area = wb_config.get(CONF_AREA)
         noop = wb_config.get(CONF_SWITCH_NOOP)
 
-        wattbox = WattBox(host, username, password, area, noop)
-        wattboxes.append(wattbox)
-        wattbox.load_xml()
-        _LOGGER.info("Loaded config from Wattbox at %s", host)
-        for switch in wattbox.switches:
-            _LOGGER.info("adding switch %s (%s)", switch, str(wattbox))
-            hass.data[DEVICES]['switch'].append((area, switch, wattbox))
+        try:
+            wattbox = WattBox(host, username, password, area, noop)
+            wattboxes.append(wattbox)
+            wattbox.load_xml()
+            _LOGGER.info("Loaded config from Wattbox at %s", host)
+            for switch in wattbox.switches:
+                _LOGGER.info("adding switch %s (%s)", switch, str(wattbox))
+                hass.data[DEVICES]['switch'].append((area, switch, wattbox))
+        except:
+            _LOGGER.error("Could not setup wattbox at %s" host)
     
     hass.data[DOMAIN] = wattboxes
     
