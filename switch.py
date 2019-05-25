@@ -1,8 +1,9 @@
 """
-Support for WattBox outlet switches
+Component for interacting with a WattBox(tm) (SnapAV) - brand
+ip-controlled power strip.
 
-For more details about this platform, please refer to the documentation at
-https://home-assistant.io/components/light.ketra/
+For more details about this component, please refer to the documentation at
+https://home-assistant.io/components/wattbox/
 """
 import logging
 
@@ -10,8 +11,6 @@ from homeassistant.components.switch import SwitchDevice
 from ..wattbox import WattBoxDevice, DEVICES, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
-
-DEPENDENCIES = ['wattbox']
 
 # pylint: disable=unused-argument
 def setup_platform(hass, config, add_devices, discovery_info=None):
@@ -22,7 +21,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         devs.append(dev)
 
     add_devices(devs, True)
-    _LOGGER.warning("Added " + str(devs))
+    _LOGGER.debug("Added %s", devs)
     return True
 
 

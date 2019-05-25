@@ -1,5 +1,6 @@
 """
-Component for interacting with a WattBox ip-controlled power strip.
+Component for interacting with a WattBox(tm) (SnapAV) - brand
+ip-controlled power strip.
 
 For more details about this component, please refer to the documentation at
 https://home-assistant.io/components/wattbox/
@@ -15,8 +16,6 @@ from homeassistant.const import CONF_PAYLOAD_OFF, CONF_PAYLOAD_ON
 from homeassistant.helpers import discovery
 from homeassistant.helpers.entity import Entity
 
-REQUIREMENTS = ['pywattbox==0.0.2']
-
 DOMAIN = 'wattbox'
 DEVICES = 'wattbox_devices'
 
@@ -29,8 +28,8 @@ DEVICE_SCHEMA = vol.Schema({
     vol.Required(CONF_HOST): cv.string,
     vol.Required(CONF_USERNAME): cv.string,
     vol.Required(CONF_PASSWORD): cv.string,
-    vol.Optional("area"): cv.string, #FIXME
-    vol.Optional("noop_set_state"): cv.boolean, #FIXME
+    vol.Optional(CONF_AREA): cv.string,
+    vol.Optional(CONF_SWITCH_NOOP): cv.boolean,
 })
 
 CONFIG_SCHEMA = vol.Schema({
@@ -64,7 +63,7 @@ def setup(hass, config):
                 _LOGGER.info("adding switch %s (%s)", switch, str(wattbox))
                 hass.data[DEVICES]['switch'].append((area, switch, wattbox))
         except:
-            _LOGGER.error("Could not setup wattbox at %s" host)
+            _LOGGER.error("Could not setup wattbox at %s", host)
     
     hass.data[DOMAIN] = wattboxes
     
