@@ -3,7 +3,7 @@
   "name": "Wattbox",
   "documentation": "https://www.home-assistant.io/components/wattbox",
   "requirements": [
-    "pywattbox==0.0.2"
+    "pywattbox==0.0.3"
   ],
   "dependencies": [],
   "codeowners": []

@@ -47,7 +47,7 @@ def setup(hass, config):
 
     hass.data[DEVICES] = {'switch': []}
 
-    for index, wb_config in enumerate(config[DOMAIN][CONF_DEVICES]):
+    for wb_config in config[DOMAIN][CONF_DEVICES]:
         host = wb_config.get(CONF_HOST)
         username = wb_config.get(CONF_USERNAME)
         password = wb_config.get(CONF_PASSWORD)
@@ -62,11 +62,11 @@ def setup(hass, config):
             for switch in wattbox.switches:
                 _LOGGER.info("adding switch %s (%s)", switch, str(wattbox))
                 hass.data[DEVICES]['switch'].append((area, switch, wattbox))
-        except:
-            _LOGGER.error("Could not setup wattbox at %s", host)
-    
+        except Exception as e:
+            _LOGGER.error("Could not setup wattbox at %s - %s", host, e)
+
     hass.data[DOMAIN] = wattboxes
-    
+
     discovery.load_platform(hass, 'switch', DOMAIN, None, config)
 
     return True
@@ -76,6 +76,7 @@ def setup(hass, config):
 class WattBoxDevice(Entity):
     """Representation of a wattbox device entity."""
 
+    # pylint: disable=protected-access
     def __init__(self, area_name, wattbox_switch, controller):
         """Initialize the device."""
         self._wattbox_switch = wattbox_switch
@@ -105,6 +106,4 @@ class WattBoxDevice(Entity):
     @property
     def unique_id(self):
         """Unique ID of wattbox device -- uses serial number and outlet number."""
-        return self._unique_id
-
-    
+        return self._unique_id    

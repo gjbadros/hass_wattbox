@@ -8,7 +8,7 @@ https://home-assistant.io/components/wattbox/
 import logging
 
 from homeassistant.components.switch import SwitchDevice
-from ..wattbox import WattBoxDevice, DEVICES, DOMAIN
+from ..wattbox import WattBoxDevice, DEVICES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,19 +35,18 @@ class WattBoxSwitch(WattBoxDevice, SwitchDevice):
 
     def turn_on(self, **kwargs):
         """Turn the switch on."""
-        self._wattbox_switch._set_state(True)
+        self._wattbox_switch.set_state(True)
         self.schedule_update_ha_state()
-        
 
     def turn_off(self, **kwargs):
         """Turn the light off."""
-        self._wattbox_switch._set_state(False)
+        self._wattbox_switch.set_state(False)
         self.schedule_update_ha_state()
 
     @property
     def is_on(self):
         """Return true if device is on."""
-        return self._wattbox_switch._on
+        return self._wattbox_switch.is_on
 
     def update(self):
         """Call when forcing a refresh of the device."""
