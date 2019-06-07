@@ -50,7 +50,7 @@ class WattBoxSwitch(WattBoxDevice, SwitchDevice):
 
     def update(self):
         """Call when forcing a refresh of the device."""
-        if self._wattbox_switch.update():
+        if self._wattbox_switch._update():
             self.schedule_update_has_state()
 
     @property
