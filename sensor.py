@@ -7,7 +7,7 @@ https://home-assistant.io/components/wattbox/
 """
 import logging
 
-from homeassistant.components.switch import SwitchDevice
+from homeassistant.helpers.entity import Entity
 from ..wattbox import WattBoxDevice, DEVICES
 
 _LOGGER = logging.getLogger(__name__)
@@ -40,11 +40,30 @@ class WattBoxSensor(WattBoxDevice, Entity):
                                controller)
         self._prev = None
         self._getter = getter
+        if sensor_name == 'power':
+            self._unit_of_measurement = 'watt'
+            self._device_class = 'power'
+        elif sensor_name == 'current':
+            self._unit_of_measurement = 'amp'
+            self._device_class = 'power'
+        elif sensor_name == 'voltage':
+            self._unit_of_measurement = 'volt'
+            self._device_class = 'voltage'
 
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self.getter()
+        return self._getter(self._controller)
+
+    @property
+    def unit_of_measurement(self):
+        """Return the unit of measurement for this sensor."""
+        return self._unit_of_measurement
+
+    @property
+    def device_class(self):
+        """Return the device class for this sensor."""
+        return self._device_class
 
     @property
     def device_state_attributes(self):

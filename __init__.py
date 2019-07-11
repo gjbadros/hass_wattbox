@@ -45,7 +45,7 @@ def setup(hass, config):
 
     wattboxes = []
 
-    hass.data[DEVICES] = {'switch': []}
+    hass.data[DEVICES] = {'switch': [], 'sensor': []}
 
     for wb_config in config[DOMAIN][CONF_DEVICES]:
         host = wb_config.get(CONF_HOST)
