@@ -62,12 +62,14 @@ def setup(hass, config):
             for switch in wattbox.switches:
                 _LOGGER.info("adding switch %s (%s)", switch, str(wattbox))
                 hass.data[DEVICES]['switch'].append((area, switch, wattbox))
+            hass.data[DEVICES]['sensor'].append((area, wattbox))
         except Exception as e:
             _LOGGER.error("Could not setup wattbox at %s - %s", host, e)
 
     hass.data[DOMAIN] = wattboxes
 
     discovery.load_platform(hass, 'switch', DOMAIN, None, config)
+    discovery.load_platform(hass, 'sensor', DOMAIN, None, config)
 
     return True
 
@@ -77,13 +79,13 @@ class WattBoxDevice(Entity):
     """Representation of a wattbox device entity."""
 
     # pylint: disable=protected-access
-    def __init__(self, area_name, wattbox_switch, controller):
+    def __init__(self, area_name, device_name, unique_name, controller):
         """Initialize the device."""
-        self._wattbox_switch = wattbox_switch
-        self._controller = controller
         self._area_name = area_name
-        self._unique_id = 'wattbox-{}-{}'.format(wattbox_switch._wattbox._serial_number,
-                                                 wattbox_switch._outlet_num)
+        self._device_name = device_name
+        self._controller = controller
+        self._unique_id = 'wattbox-{}-{}'.format(controller._serial_number,
+                                                 unique_name)
 
     @asyncio.coroutine
     def async_added_to_hass(self):
@@ -96,7 +98,7 @@ class WattBoxDevice(Entity):
     @property
     def name(self):
         """Return the name of the device."""
-        return "{} {}".format(self._area_name, self._wattbox_switch.name)
+        return "{} {}".format(self._area_name, self._device_name)
 
     @property
     def should_poll(self):
@@ -106,4 +108,4 @@ class WattBoxDevice(Entity):
     @property
     def unique_id(self):
         """Unique ID of wattbox device -- uses serial number and outlet number."""
-        return self._unique_id    
+        return self._unique_id
