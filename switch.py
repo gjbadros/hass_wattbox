@@ -31,7 +31,11 @@ class WattBoxSwitch(WattBoxDevice, SwitchDevice):
 
     def __init__(self, area_name, wattbox_switch, controller):
         """Initialize the light."""
-        WattBoxDevice.__init__(self, area_name, wattbox_switch, controller)
+        WattBoxDevice.__init__(self, area_name,
+                               wattbox_switch.name,
+                               wattbox_switch.outlet_num,
+                               controller)
+        self._wattbox_switch = wattbox_switch
         self._prev = None
 
     def turn_on(self, **kwargs):
