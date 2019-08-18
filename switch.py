@@ -12,6 +12,7 @@ from ..wattbox import WattBoxDevice, DEVICES
 
 _LOGGER = logging.getLogger(__name__)
 
+
 # pylint: disable=unused-argument
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the wattbox power strip switches."""
