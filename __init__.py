@@ -55,7 +55,7 @@ def setup(hass, config):
         password = wb_config.get(CONF_PASSWORD)
         area = wb_config.get(CONF_AREA)
         noop = wb_config.get(CONF_SWITCH_NOOP)
-        exclude_name_substring = config.get(CONF_EXCLUDE_NAME_SUBSTRING)
+        exclude_name_substring = wb_config.get(CONF_EXCLUDE_NAME_SUBSTRING)
         set_exclude_name_substring = set()
 
         if exclude_name_substring:
