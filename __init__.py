@@ -125,5 +125,6 @@ class WattBoxDevice(Entity):
 
     @property
     def unique_id(self):
-        """Unique ID of wattbox device -- uses serial number and outlet number."""
+        """Unique ID of wattbox device.
+Uses serial number and outlet number."""
         return self._unique_id
