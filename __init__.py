@@ -105,7 +105,6 @@ class WattBoxDevice(Entity):
         self._unique_id = 'wattbox-{}-{}'.format(controller._serial_number,
                                                  unique_name)
 
-    @asyncio.coroutine
     def async_added_to_hass(self):
         """Register callbacks."""
 

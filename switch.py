@@ -7,7 +7,7 @@ https://home-assistant.io/components/wattbox/
 """
 import logging
 
-from homeassistant.components.switch import SwitchDevice
+from homeassistant.components.switch import SwitchEntity
 from ..wattbox import WattBoxDevice, DEVICES
 
 _LOGGER = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     return True
 
 
-class WattBoxSwitch(WattBoxDevice, SwitchDevice):
+class WattBoxSwitch(WattBoxDevice, SwitchEntity):
     """Representation of a WattBox outlet, just on and off."""
 
     def __init__(self, area_name, wattbox_switch, controller):
